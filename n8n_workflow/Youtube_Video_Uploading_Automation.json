@@ -1,0 +1,236 @@
+{
+  "name": "Youtube_Video_Uploading_Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "upload",
+        "title": "={{ $json.name }}",
+        "regionCode": "DE",
+        "categoryId": "1",
+        "options": {
+          "description": "Automated upload test from n8n 2"
+        }
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        912,
+        -224
+      ],
+      "id": "4616c7e5-203c-45e9-a342-9b509ea9995e",
+      "name": "Upload a video1",
+      "credentials": {
+        
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the files array from the single incoming item\nconst files = $input.first().json.files || [];\n\nif (!files.length) {\n  throw new Error('Inbox is empty: no MP4 files found in Google Drive folder.');\n}\n\n// Pick 1 random file\nconst picked = files[Math.floor(Math.random() * files.length)];\n\n// Return ONE n8n item, containing the picked file\nreturn [{ json: picked }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        -224
+      ],
+      "id": "d419ed7e-a082-43b5-a207-c2ea26327ed5",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Code in JavaScript1').item.json.id }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1ye4PPDlOpdvKA001nEVHY_pSvyF6vqVJ",
+          "mode": "list",
+          "cachedResultName": "YouTube_Uploaded",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1ye4PPDlOpdvKA001nEVHY_pSvyF6vqVJ"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1120,
+        -224
+      ],
+      "id": "f98e87d5-18a3-41f1-b19a-2d01fe255f12",
+      "name": "Move file",
+      "credentials": {
+        
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        688,
+        -224
+      ],
+      "id": "9bac7af7-46b4-4821-8f68-dca0aa814a42",
+      "name": "Download file",
+      "credentials": {
+        
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": ,
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value":
+            },
+            {
+              "name": "fields",
+              "value": "files(id,name,mimeType,size)"
+            },
+            {
+              "name": "pageSize",
+              "value": "100"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        272,
+        -224
+      ],
+      "id": "21e85a20-b3f0-487e-bc7e-38af243afa31",
+      "name": "HTTP Request4",
+      "credentials": {
+       
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Automated Youtube Video Uploader",
+        "height": 560,
+        "width": 1632,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        -448
+      ],
+      "typeVersion": 1,
+      "id": "a1e5b037-6b56-43bb-8eb3-19bdb83576b5",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        64,
+        -224
+      ],
+      "id": "e0f03239-aaae-4a9c-b0b1-ed7a8b85c529",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload a video1": {
+      "main": [
+        [
+          {
+            "node": "Move file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Upload a video1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request4": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "ef55a35b-ad71-433b-a8d5-a3b20005c865",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "592a80e31400d838817676aca75ed70b3cebd75dfeb405350daa15afb571b10a"
+  },
+  "id": "8NcqIJi9f4nn5bPPFebhe",
+  "tags": [
+    {
+      "name": "done",
+      "id": "vcolPDYGuO9AX3cJ",
+      "updatedAt": "2026-02-07T18:38:45.992Z",
+      "createdAt": "2026-02-07T18:38:45.992Z"
+    }
+  ]
+}

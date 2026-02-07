@@ -1,0 +1,22 @@
+# n8n local data
+n8n_data/
+.n8n/
+*.sqlite
+*.db
+
+# videos and large binaries
+sample_videos/
+*.mp4
+*.mov
+*.mkv
+
+# screenshots
+*.png
+*.jpg
+*.jpeg
+
+# mac
+.DS_Store
+
+# env files
+.env
