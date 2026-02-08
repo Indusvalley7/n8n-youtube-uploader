@@ -3,6 +3,7 @@
 An automated workflow built with **n8n** to upload videos to **YouTube** with minimal manual effort.  
 This project is designed to help creators and developers automate repetitive YouTube upload tasks using a self-hosted or Docker-based n8n setup.
 
+<img width="1197" height="496" alt="Screenshot 2026-02-07 at 8 12 28 PM" src="https://github.com/user-attachments/assets/cb92e23d-26ca-4fab-a0c0-fca4d1e6f794" />
 
 
 ## ✨ What this project does
